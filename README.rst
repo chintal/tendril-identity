@@ -1,16 +1,15 @@
-=============================
-Tendril Config Infrastructure
-=============================
+==========================================
+Tendril Identity Management Infrastructure
+==========================================
 
-.. image:: https://img.shields.io/travis/chintal/tendril-config.svg
-        :target: https://travis-ci.org/chintal/tendril-config
+.. image:: https://img.shields.io/travis/chintal/tendril-identity.svg
+        :target: https://travis-ci.org/chintal/tendril-identity
 
-.. image:: https://img.shields.io/pypi/v/tendril-config.svg
-        :target: https://pypi.python.org/pypi/tendril-config
+.. image:: https://img.shields.io/pypi/v/tendril-identity.svg
+        :target: https://pypi.python.org/pypi/tendril-identity
 
 * License: AGPLv3
-* Documentation: http://tendril-config.readthedocs.org
+* Documentation: http://tendril-identity.readthedocs.org
 
-
-Tendril Config Infrastructure
+Tendril Identity Management Infrastructure
 
