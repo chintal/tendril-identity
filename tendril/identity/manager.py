@@ -18,7 +18,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+import os
+import glob
+
+from tendril import schema
 from tendril.config import PRIMARY_PERSONA
+
+from tendril.config import instance_path
 from tendril.utils import log
 logger = log.get_logger(__name__, log.DEBUG)
 
@@ -34,7 +41,12 @@ class IdentityManager(object):
         return self._identities_loaded[PRIMARY_PERSONA]
 
     def _load_identities(self):
-        pass
+        candidates = glob.glob(
+            os.path.join(instance_path('identity'), '*.yaml')
+        )
+        for candidate in candidates:
+            persona = schema.load(candidate)
+            self._identities_loaded[persona.ident] = persona
 
     def __getattr__(self, item):
         return self._identities_loaded[item]
