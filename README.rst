@@ -1,6 +1,6 @@
-==========================================
-Tendril Identity Management Infrastructure
-==========================================
+===========================
+Tendril Identity Management
+===========================
 
 .. image:: https://img.shields.io/travis/chintal/tendril-identity.svg
         :target: https://travis-ci.org/chintal/tendril-identity
@@ -11,5 +11,5 @@ Tendril Identity Management Infrastructure
 * License: AGPLv3
 * Documentation: http://tendril-identity.readthedocs.org
 
-Tendril Identity Management Infrastructure
+Tendril Identity Management
 

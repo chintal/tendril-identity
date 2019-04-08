@@ -18,30 +18,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-import importlib
-from tendril.utils.fsutils import get_namespace_package_names
+from tendril.config import PRIMARY_PERSONA
 from tendril.utils import log
 logger = log.get_logger(__name__, log.DEBUG)
-
-
-class IdentityBase(object):
-    pass
 
 
 class IdentityManager(object):
     def __init__(self, prefix):
         self._prefix = prefix
-        self._modules = {}
-        self._identities_loaded = []
-        self._load_modules()
+        self._identities_loaded = {}
         self._load_identities()
+
+    @property
+    def primary_persona(self):
+        return self._identities_loaded[PRIMARY_PERSONA]
 
     def _load_identities(self):
         pass
 
-    def _load_modules(self):
-        logger.debug("Loading identity modules from {0}".format(self._prefix))
-        modules = list(get_namespace_package_names(self._prefix))
-        for m_name in modules:
-            self._modules[m_name] = importlib.import_module(m_name)
+    def __getattr__(self, item):
+        return self._identities_loaded[item]
