@@ -38,6 +38,18 @@ class TendrilSignatory(object):
                "".format(self.name, self.designation)
 
 
+class TendrilBankAccountInfo(object):
+    def __init__(self, parent, accno, bank_name,
+                 branch_address, branch_code, micr, ifsc):
+        self.parent = parent
+        self.accno = accno
+        self.bank_name = bank_name
+        self.branch_address = branch_address
+        self.branch_code = branch_code
+        self.micr = micr
+        self.ifsc = ifsc
+
+
 class SchemaObjectSet(object):
     # TODO This needs a more appropriate home, perhaps alongside
     #      SchemaControlledYamlFile, if the import issue can be sorted out
@@ -66,15 +78,21 @@ class SchemaSelectableObjectSet(SchemaObjectSet):
             return self.default
         return super(SchemaSelectableObjectSet, self).__getitem__(item)
 
+    def __repr__(self):
+        return "<{0} {1}>".format(self.__class__.__name__ ,
+                                  ','.join(self.content.keys()))
+
 
 class TendrilSignatories(SchemaSelectableObjectSet):
     def __init__(self, signatories):
-        super(TendrilSignatories, self).__init__(signatories,
-                                                 TendrilSignatory)
+        super(TendrilSignatories, self).__init__(
+            signatories, TendrilSignatory)
 
-    def __repr__(self):
-        return "<TendrilSignatories {0}>" \
-               "".format(','.join(self.content.keys()))
+
+class TendrilBankAccounts(SchemaSelectableObjectSet):
+    def __init__(self, bank_accounts):
+        super(TendrilBankAccounts, self).__init__(
+            bank_accounts, TendrilBankAccountInfo)
 
 
 class MultilineString(list):
@@ -94,6 +112,7 @@ class TendrilPersona(SchemaControlledYamlFile):
 
     def __init__(self, *args, **kwargs):
         self._signatory = kwargs.get('signatory', None)
+        self._bank_account = kwargs.get('bank_account', None)
         super(TendrilPersona, self).__init__(*args, **kwargs)
 
     def elements(self):
@@ -104,6 +123,7 @@ class TendrilPersona(SchemaControlledYamlFile):
             ('name_short', ('identity', 'name_short'), None),
             ('phone', ('identity', 'phone'), None),
             ('email', ('identity', 'email'), None),
+            ('website', ('identity', 'website'), None),
             ('address', ('identity', 'address'), MultilineString),
             ('address_line', ('identity', 'address_line'), None),
             ('iec', ('identity', 'iec'), None),
@@ -113,7 +133,8 @@ class TendrilPersona(SchemaControlledYamlFile):
             ('logo', ('identity', 'logo'), instance_path),
             ('black_logo', ('identity', 'black_logo'), instance_path),
             ('square_logo', ('identity', 'square_logo'), instance_path),
-            ('signatories', ('identity', 'signatories'), TendrilSignatories)
+            ('signatories', ('identity', 'signatories'), TendrilSignatories),
+            ('bank_accounts', ('identity', 'bank_accounts'), )
         ])
         return e
 
@@ -135,6 +156,16 @@ class TendrilPersona(SchemaControlledYamlFile):
         if value not in self.signatories.keys():
             raise ValueError("Unrecognized Signatory : {0}".format(value))
         self._signatory = value
+
+    @property
+    def bank_account(self):
+        return self.bank_accounts[self._bank_account]
+
+    @bank_account.setter
+    def bank_account(self, value):
+        if value not in self.bank_accounts.keys():
+            raise ValueError("Unrecognized Bank Account : {0}".format(value))
+        self._bank_account = value
 
     def __repr__(self):
         return "<TendrilPersona {0} {1}>".format(self.ident, self.path)
