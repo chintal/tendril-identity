@@ -134,7 +134,7 @@ class TendrilPersona(SchemaControlledYamlFile):
             ('black_logo', ('identity', 'black_logo'), instance_path),
             ('square_logo', ('identity', 'square_logo'), instance_path),
             ('signatories', ('identity', 'signatories'), TendrilSignatories),
-            ('bank_accounts', ('identity', 'bank_accounts'), )
+            ('bank_accounts', ('identity', 'bank_accounts'), TendrilBankAccounts)
         ])
         return e
 

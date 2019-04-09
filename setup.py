@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='tendril-identity',
-    version='0.1.3',
+    version='0.1.4',
     description="Tendril Identity Management",
     long_description=readme,
     author="Chintalagiri Shashank",
