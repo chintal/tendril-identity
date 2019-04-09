@@ -19,9 +19,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from six import iteritems
 from decimal import Decimal
 from tendril.schema.base import SchemaControlledYamlFile
+from tendril.schema.helpers import SchemaSelectableObjectSet
+from tendril.schema.helpers import MultilineString
 from tendril.config import instance_path
 from tendril.utils import log
 logger = log.get_logger(__name__, log.DEFAULT)
@@ -50,39 +51,6 @@ class TendrilBankAccountInfo(object):
         self.ifsc = ifsc
 
 
-class SchemaObjectSet(object):
-    # TODO This needs a more appropriate home, perhaps alongside
-    #      SchemaControlledYamlFile, if the import issue can be sorted out
-    def __init__(self, content, objtype):
-        self.content = {}
-        for k, v in iteritems(content):
-            self.content[k] = objtype(self, **v)
-
-    def keys(self):
-        return self.content.keys()
-
-    def __getitem__(self, item):
-        return self.content[item]
-
-
-class SchemaSelectableObjectSet(SchemaObjectSet):
-    # TODO This needs a more appropriate home, perhaps alongside
-    #      SchemaControlledYamlFile, if the import issue can be sorted out
-    def __init__(self, content, objtype):
-        default = content.pop('default')
-        super(SchemaSelectableObjectSet, self).__init__(content, objtype)
-        self.default = self.content[default]
-
-    def __getitem__(self, item):
-        if not item:
-            return self.default
-        return super(SchemaSelectableObjectSet, self).__getitem__(item)
-
-    def __repr__(self):
-        return "<{0} {1}>".format(self.__class__.__name__ ,
-                                  ','.join(self.content.keys()))
-
-
 class TendrilSignatories(SchemaSelectableObjectSet):
     def __init__(self, signatories):
         super(TendrilSignatories, self).__init__(
@@ -93,16 +61,6 @@ class TendrilBankAccounts(SchemaSelectableObjectSet):
     def __init__(self, bank_accounts):
         super(TendrilBankAccounts, self).__init__(
             bank_accounts, TendrilBankAccountInfo)
-
-
-class MultilineString(list):
-    # TODO Find a better home for this. Perhaps in t.u.types, and extend
-    #      support to TXMultilineString in t.u.c.tally.
-    def __init__(self, value):
-        super(MultilineString, self).__init__(value)
-
-    def __repr__(self):
-        return '\n'.join(self)
 
 
 class TendrilPersona(SchemaControlledYamlFile):
@@ -120,6 +78,7 @@ class TendrilPersona(SchemaControlledYamlFile):
         e.extend([
             ('_ident', ('identity', 'ident'), None),
             ('name', ('identity', 'name'), None),
+            ('name_full', ('identity', 'name_full'), None),
             ('name_short', ('identity', 'name_short'), None),
             ('phone', ('identity', 'phone'), None),
             ('email', ('identity', 'email'), None),

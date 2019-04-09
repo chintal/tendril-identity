@@ -16,7 +16,7 @@ with open('README.rst') as readme_file:
 requirements = [
     'tendril-utils-core>=0.1.13',
     'tendril-config>=0.1.6',
-    'tendril-schema>=0.1.3'
+    'tendril-schema>=0.1.4'
 ]
 
 test_requirements = [
@@ -25,7 +25,7 @@ test_requirements = [
 
 setup(
     name='tendril-identity',
-    version='0.1.4',
+    version='0.1.5',
     description="Tendril Identity Management",
     long_description=readme,
     author="Chintalagiri Shashank",
