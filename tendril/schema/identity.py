@@ -21,6 +21,7 @@
 
 from decimal import Decimal
 from tendril.schema.base import SchemaControlledYamlFile
+from tendril.schema.base import NakedSchemaObject
 from tendril.schema.helpers import SchemaSelectableObjectSet
 from tendril.schema.helpers import MultilineString
 from tendril.config import instance_path
@@ -28,39 +29,48 @@ from tendril.utils import log
 logger = log.get_logger(__name__, log.DEFAULT)
 
 
-class TendrilSignatory(object):
-    def __init__(self, parent, name, designation):
-        self.parent = parent
-        self.name = name
-        self.designation = designation
+class TendrilSignatory(NakedSchemaObject):
+    def elements(self):
+        e = super(TendrilSignatory, self).elements()
+        e.update({
+            'name':        self._p(('name',),),
+            'designation': self._p(('designation',),),
+        })
+        return e
 
     def __repr__(self):
         return "<TendrilSignatory {0}, {1}>" \
                "".format(self.name, self.designation)
 
 
-class TendrilBankAccountInfo(object):
-    def __init__(self, parent, accno, bank_name,
-                 branch_address, branch_code, micr, ifsc):
-        self.parent = parent
-        self.accno = accno
-        self.bank_name = bank_name
-        self.branch_address = branch_address
-        self.branch_code = branch_code
-        self.micr = micr
-        self.ifsc = ifsc
+class TendrilBankAccountInfo(NakedSchemaObject):
+    def elements(self):
+        e = super(TendrilBankAccountInfo, self).elements()
+        e.update({
+            'accno':          self._p(('accno',),),
+            'bank_name':      self._p(('bank_name',),),
+            'branch_address': self._p(('branch_address',), ),
+            'branch_code'   : self._p(('branch_code',), ),
+            'micr':           self._p(('micr',), ),
+            'ifsc':           self._p(('ifsc',), ),
+        })
+        return e
+
+    def __repr__(self):
+        return "<TendrilBankAccountInfo {0} {1}>" \
+               "".format(self.bank_name, self.accno)
 
 
 class TendrilSignatories(SchemaSelectableObjectSet):
-    def __init__(self, signatories):
+    def __init__(self, signatories, *args, **kwargs):
         super(TendrilSignatories, self).__init__(
-            signatories, TendrilSignatory)
+            signatories, TendrilSignatory, *args, **kwargs)
 
 
 class TendrilBankAccounts(SchemaSelectableObjectSet):
-    def __init__(self, bank_accounts):
+    def __init__(self, bank_accounts, *args, **kwargs):
         super(TendrilBankAccounts, self).__init__(
-            bank_accounts, TendrilBankAccountInfo)
+            bank_accounts, TendrilBankAccountInfo, *args, **kwargs)
 
 
 class TendrilPersona(SchemaControlledYamlFile):
@@ -75,26 +85,26 @@ class TendrilPersona(SchemaControlledYamlFile):
 
     def elements(self):
         e = super(TendrilPersona, self).elements()
-        e.extend([
-            ('_ident', ('identity', 'ident'), None),
-            ('name', ('identity', 'name'), None),
-            ('name_full', ('identity', 'name_full'), None),
-            ('name_short', ('identity', 'name_short'), None),
-            ('phone', ('identity', 'phone'), None),
-            ('email', ('identity', 'email'), None),
-            ('website', ('identity', 'website'), None),
-            ('address', ('identity', 'address'), MultilineString),
-            ('address_line', ('identity', 'address_line'), None),
-            ('iec', ('identity', 'iec'), None),
-            ('pan', ('identity', 'pan'), None),
-            ('cin', ('identity', 'cin'), None),
-            ('gstin', ('identity', 'gstin'), None),
-            ('logo', ('identity', 'logo'), instance_path),
-            ('black_logo', ('identity', 'black_logo'), instance_path),
-            ('square_logo', ('identity', 'square_logo'), instance_path),
-            ('signatories', ('identity', 'signatories'), TendrilSignatories),
-            ('bank_accounts', ('identity', 'bank_accounts'), TendrilBankAccounts)
-        ])
+        e.update({
+            '_ident':        self._p(('identity', 'ident'), ),
+            'name':          self._p(('identity', 'name'), ),
+            '_name_full':    self._p(('identity', 'name_full'),     required=False),  # noqa
+            '_name_short':   self._p(('identity', 'name_short'),    required=False),  # noqa
+            'phone':         self._p(('identity', 'phone'),         required=False),  # noqa
+            'email':         self._p(('identity', 'email'),         required=False),  # noqa
+            'website':       self._p(('identity', 'website'),       required=False),  # noqa
+            'address':       self._p(('identity', 'address'),       required=False, parser=MultilineString),  # noqa
+            'address_line':  self._p(('identity', 'address_line'),  required=False),  # noqa
+            'iec':           self._p(('identity', 'iec'),           required=False),  # noqa
+            'pan':           self._p(('identity', 'pan'),           required=False),  # noqa
+            'cin':           self._p(('identity', 'cin'),           required=False),  # noqa
+            'gstin':         self._p(('identity', 'gstin'),         required=False),  # noqa
+            'logo':          self._p(('identity', 'logo'),          required=False, parser=instance_path),  # noqa
+            'black_logo':    self._p(('identity', 'black_logo'),    required=False, parser=instance_path),  # noqa
+            'square_logo':   self._p(('identity', 'square_logo'),   required=False, parser=instance_path),  # noqa
+            'signatories':   self._p(('identity', 'signatories'),   required=False, parser=TendrilSignatories),  # noqa
+            'bank_accounts': self._p(('identity', 'bank_accounts'), required=False, parser=TendrilBankAccounts),  # noqa
+        })
         return e
 
     def schema_policies(self):
@@ -105,6 +115,14 @@ class TendrilPersona(SchemaControlledYamlFile):
     @property
     def ident(self):
         return self._ident
+
+    @property
+    def name_short(self):
+        return self._name_short or self.name
+
+    @property
+    def name_full(self):
+        return self._name_full or self.name
 
     @property
     def signatory(self):
