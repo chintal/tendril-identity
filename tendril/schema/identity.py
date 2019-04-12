@@ -29,9 +29,9 @@ from tendril.utils import log
 logger = log.get_logger(__name__, log.DEFAULT)
 
 
-class TendrilSignatory(NakedSchemaObject):
+class IdentitySignatory(NakedSchemaObject):
     def elements(self):
-        e = super(TendrilSignatory, self).elements()
+        e = super(IdentitySignatory, self).elements()
         e.update({
             'name':        self._p(('name',),),
             'designation': self._p(('designation',),),
@@ -39,13 +39,13 @@ class TendrilSignatory(NakedSchemaObject):
         return e
 
     def __repr__(self):
-        return "<TendrilSignatory {0}, {1}>" \
+        return "<IdentitySignatory {0}, {1}>" \
                "".format(self.name, self.designation)
 
 
-class TendrilBankAccountInfo(NakedSchemaObject):
+class IdentityBankAccountInfo(NakedSchemaObject):
     def elements(self):
-        e = super(TendrilBankAccountInfo, self).elements()
+        e = super(IdentityBankAccountInfo, self).elements()
         e.update({
             'accno':          self._p(('accno',),),
             'bank_name':      self._p(('bank_name',),),
@@ -57,20 +57,16 @@ class TendrilBankAccountInfo(NakedSchemaObject):
         return e
 
     def __repr__(self):
-        return "<TendrilBankAccountInfo {0} {1}>" \
+        return "<IdentityBankAccountInfo {0} {1}>" \
                "".format(self.bank_name, self.accno)
 
 
-class TendrilSignatories(SchemaSelectableObjectSet):
-    def __init__(self, signatories, *args, **kwargs):
-        super(TendrilSignatories, self).__init__(
-            signatories, TendrilSignatory, *args, **kwargs)
+class IdentitySignatories(SchemaSelectableObjectSet):
+    _objtype = IdentitySignatory
 
 
-class TendrilBankAccounts(SchemaSelectableObjectSet):
-    def __init__(self, bank_accounts, *args, **kwargs):
-        super(TendrilBankAccounts, self).__init__(
-            bank_accounts, TendrilBankAccountInfo, *args, **kwargs)
+class IdentityBankAccounts(SchemaSelectableObjectSet):
+    _objtype = IdentityBankAccountInfo
 
 
 class TendrilPersona(SchemaControlledYamlFile):
@@ -102,8 +98,8 @@ class TendrilPersona(SchemaControlledYamlFile):
             'logo':          self._p(('identity', 'logo'),          required=False, parser=instance_path),  # noqa
             'black_logo':    self._p(('identity', 'black_logo'),    required=False, parser=instance_path),  # noqa
             'square_logo':   self._p(('identity', 'square_logo'),   required=False, parser=instance_path),  # noqa
-            'signatories':   self._p(('identity', 'signatories'),   required=False, parser=TendrilSignatories),  # noqa
-            'bank_accounts': self._p(('identity', 'bank_accounts'), required=False, parser=TendrilBankAccounts),  # noqa
+            'signatories':   self._p(('identity', 'signatories'),   required=False, parser=IdentitySignatories),   # noqa
+            'bank_accounts': self._p(('identity', 'bank_accounts'), required=False, parser=IdentityBankAccounts),  # noqa
         })
         return e
 
