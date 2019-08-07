@@ -19,6 +19,7 @@ Provided Schema Definitions
 .. toctree::
 
    tendril.schema.identity
+   tendril.schema.identity_persona
 
 Related Configuration Options
 -----------------------------

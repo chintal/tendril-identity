@@ -19,8 +19,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """
-Tendril Identity Schema
-=======================
+Base Identity Schema
+====================
 """
 
 
@@ -149,15 +149,7 @@ class TendrilIdentity(SchemaControlledYamlFile):
         return "<{0} {1} {2}>".format(self.__class__.__name__, self.ident, self.path)
 
 
-class TendrilPersona(TendrilIdentity):
-    supports_schema_name = 'TendrilPersona'
-    supports_schema_version_max = Decimal('1.0')
-    supports_schema_version_min = Decimal('1.0')
-
-
 def load(manager):
     logger.debug("Loading {0}".format(__name__))
     manager.load_schema('TendrilIdentity', TendrilIdentity,
                         doc="Base Schema for Tendril Identity Definition Files")
-    manager.load_schema('TendrilPersona', TendrilPersona,
-                        doc="Schema for Tendril Persona Definition Files")
