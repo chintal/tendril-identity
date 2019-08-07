@@ -27,7 +27,7 @@ import os
 import glob
 
 from tendril import schema
-from tendril.schema.identity import TendrilPersona
+from tendril.schema.identity_persona import TendrilPersona
 from tendril.config import PRIMARY_PERSONA
 
 from tendril.config import instance_path
