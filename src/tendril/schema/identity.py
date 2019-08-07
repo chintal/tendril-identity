@@ -69,18 +69,18 @@ class IdentityBankAccounts(SchemaSelectableObjectSet):
     _objtype = IdentityBankAccountInfo
 
 
-class TendrilPersona(SchemaControlledYamlFile):
-    supports_schema_name = 'TendrilPersona'
+class TendrilIdentity(SchemaControlledYamlFile):
+    supports_schema_name = 'TendrilIdentity'
     supports_schema_version_max = Decimal('1.0')
     supports_schema_version_min = Decimal('1.0')
 
     def __init__(self, *args, **kwargs):
         self._signatory = kwargs.get('signatory', None)
         self._bank_account = kwargs.get('bank_account', None)
-        super(TendrilPersona, self).__init__(*args, **kwargs)
+        super(TendrilIdentity, self).__init__(*args, **kwargs)
 
     def elements(self):
-        e = super(TendrilPersona, self).elements()
+        e = super(TendrilIdentity, self).elements()
         e.update({
             '_ident':        self._p(('identity', 'ident'), ),
             'name':          self._p(('identity', 'name'), ),
@@ -104,7 +104,7 @@ class TendrilPersona(SchemaControlledYamlFile):
         return e
 
     def schema_policies(self):
-        policies = super(TendrilPersona, self).schema_policies()
+        policies = super(TendrilIdentity, self).schema_policies()
         policies.update({})
         return policies
 
@@ -141,10 +141,18 @@ class TendrilPersona(SchemaControlledYamlFile):
         self._bank_account = value
 
     def __repr__(self):
-        return "<TendrilPersona {0} {1}>".format(self.ident, self.path)
+        return "<{0} {1} {2}>".format(self.__class__.__name__, self.ident, self.path)
+
+
+class TendrilPersona(TendrilIdentity):
+    supports_schema_name = 'TendrilPersona'
+    supports_schema_version_max = Decimal('1.0')
+    supports_schema_version_min = Decimal('1.0')
 
 
 def load(manager):
     logger.debug("Loading {0}".format(__name__))
+    manager.load_schema('TendrilIdentity', TendrilIdentity,
+                        doc="Base Schema for Tendril Identity Definition Files")
     manager.load_schema('TendrilPersona', TendrilPersona,
                         doc="Schema for Tendril Persona Definition Files")

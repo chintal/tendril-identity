@@ -23,6 +23,7 @@ import os
 import glob
 
 from tendril import schema
+from tendril.schema.identity import TendrilPersona
 from tendril.config import PRIMARY_PERSONA
 
 from tendril.config import instance_path
@@ -46,6 +47,8 @@ class IdentityManager(object):
         )
         for candidate in candidates:
             persona = schema.load(candidate)
+            if not isinstance(persona, TendrilPersona):
+                continue
             self._identities_loaded[persona.ident] = persona
 
     def __getattr__(self, item):
