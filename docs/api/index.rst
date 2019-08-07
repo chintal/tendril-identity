@@ -2,8 +2,15 @@
 API Documentation
 =================
 
+.. automodule:: tendril.identity
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Tendril Persona Infrastructure
+------------------------------
+
 .. toctree::
-    tendril.identity
     tendril.identity.persona
     tendril.identity.persona.manager
 
