@@ -52,4 +52,7 @@ class IdentityManager(object):
             self._identities_loaded[persona.ident] = persona
 
     def __getattr__(self, item):
+        if item == '__all__':
+            return list(self._identities_loaded.keys()) + \
+                   ['primary_persona']
         return self._identities_loaded[item]
