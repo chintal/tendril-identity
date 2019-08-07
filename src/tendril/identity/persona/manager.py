@@ -53,6 +53,5 @@ class IdentityManager(object):
 
     def __getattr__(self, item):
         if item == '__all__':
-            return list(self._identities_loaded.keys()) + \
-                   ['primary_persona']
+            return list(self._identities_loaded.keys())
         return self._identities_loaded[item]
