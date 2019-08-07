@@ -11,7 +11,6 @@ Tendril Persona Infrastructure
 ------------------------------
 
 .. toctree::
-    tendril.identity.persona
     tendril.identity.persona.manager
 
 Provided Schema Definitions
@@ -24,7 +23,8 @@ Provided Schema Definitions
 Related Configuration Options
 -----------------------------
 
-.. toctree::
-
-   tendril.config.identity
+.. automodule:: tendril.config.identity
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
