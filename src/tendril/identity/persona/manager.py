@@ -59,5 +59,5 @@ class IdentityManager(object):
         if item == '__all__':
             return list(self._identities_loaded.keys())
         if item == '__path__':
-            return __path__
+            return self.__module__.__path__
         return self._identities_loaded[item]
