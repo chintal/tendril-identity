@@ -58,4 +58,6 @@ class IdentityManager(object):
     def __getattr__(self, item):
         if item == '__all__':
             return list(self._identities_loaded.keys())
+        if item == '__path__':
+            return __path__
         return self._identities_loaded[item]
