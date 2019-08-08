@@ -42,8 +42,20 @@ class IdentityManager(object):
         self._load_identities()
 
     @property
+    def _placeholder_persona(self):
+        return TendrilPersona({'ident': 'PLACEHOLDER',
+                               'name': 'Placeholder Identity'})
+
+    @property
     def primary_persona(self):
-        return self._identities_loaded[PRIMARY_PERSONA]
+        if PRIMARY_PERSONA:
+            return self._identities_loaded[PRIMARY_PERSONA]
+        else:
+            if len(self._identities_loaded.keys()) == 1:
+                return self._identities_loaded[
+                    self._identities_loaded.keys()[0]
+                ]
+            return self._placeholder_persona
 
     def _load_identities(self):
         _persona_folder = instance_path('identity')
@@ -59,9 +71,6 @@ class IdentityManager(object):
         logger.debug("Done loading personas from {0}".format(_persona_folder))
 
     def __getattr__(self, item):
-        if item is None:
-            return TendrilPersona({'ident': 'UNDEFINED',
-                                   'name': 'Placeholder Identity'})
         if item == '__all__':
             return list(self._identities_loaded.keys())
         if item == '__path__':
