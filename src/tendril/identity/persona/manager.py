@@ -32,7 +32,7 @@ from tendril.config import PRIMARY_PERSONA
 
 from tendril.config import instance_path
 from tendril.utils import log
-logger = log.get_logger(__name__, log.DEBUG)
+logger = log.get_logger(__name__, log.DEFAULT)
 
 
 class IdentityManager(object):
@@ -46,16 +46,21 @@ class IdentityManager(object):
         return self._identities_loaded[PRIMARY_PERSONA]
 
     def _load_identities(self):
-        candidates = glob.glob(
-            os.path.join(instance_path('identity'), '*.yaml')
-        )
+        _persona_folder = instance_path('identity')
+        logger.debug("Loading personas from {0}".format(_persona_folder))
+        candidates = glob.glob(os.path.join(_persona_folder, '*.yaml'))
         for candidate in candidates:
             persona = schema.load(candidate)
             if not isinstance(persona, TendrilPersona):
                 continue
+            logger.debug("Installing persona {0} from {1}"
+                         "".format(persona.ident, candidate))
             self._identities_loaded[persona.ident] = persona
+        logger.debug("Done loading personas from {0}".format(_persona_folder))
 
     def __getattr__(self, item):
+        if item is None:
+            return TendrilPersona
         if item == '__all__':
             return list(self._identities_loaded.keys())
         if item == '__path__':

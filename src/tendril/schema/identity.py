@@ -24,8 +24,6 @@ Base Identity Schema
 """
 
 
-from decimal import Decimal
-from tendril.schema.base import SchemaControlledYamlFile
 from tendril.schema.base import NakedSchemaObject
 from tendril.schema.helpers import SchemaSelectableObjectSet
 from tendril.schema.helpers import MultilineString
@@ -74,11 +72,7 @@ class IdentityBankAccounts(SchemaSelectableObjectSet):
     _objtype = IdentityBankAccountInfo
 
 
-class TendrilIdentity(SchemaControlledYamlFile):
-    supports_schema_name = 'TendrilIdentity'
-    supports_schema_version_max = Decimal('1.0')
-    supports_schema_version_min = Decimal('1.0')
-
+class TendrilIdentity(NakedSchemaObject):
     def __init__(self, *args, **kwargs):
         self._signatory = kwargs.get('signatory', None)
         self._bank_account = kwargs.get('bank_account', None)
@@ -152,4 +146,4 @@ class TendrilIdentity(SchemaControlledYamlFile):
 def load(manager):
     logger.debug("Loading {0}".format(__name__))
     manager.load_schema('TendrilIdentity', TendrilIdentity,
-                        doc="Base Schema for Tendril Identity Definition Files")
+                        doc="Base Schema for Tendril Identity Definitions")

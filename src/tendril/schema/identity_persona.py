@@ -25,6 +25,7 @@ Persona Identity Schema
 
 from decimal import Decimal
 
+from tendril.schema.base import SchemaControlledYamlFile
 from .identity import TendrilIdentity
 
 from tendril.utils import log
@@ -37,7 +38,15 @@ class TendrilPersona(TendrilIdentity):
     supports_schema_version_min = Decimal('1.0')
 
 
+class TendrilPersonaFile(TendrilPersona, SchemaControlledYamlFile):
+    supports_schema_name = 'TendrilPersonaFile'
+    supports_schema_version_max = Decimal('1.0')
+    supports_schema_version_min = Decimal('1.0')
+
+
 def load(manager):
     logger.debug("Loading {0}".format(__name__))
     manager.load_schema('TendrilPersona', TendrilPersona,
+                        doc="Schema for Tendril Persona Definitions")
+    manager.load_schema('TendrilPersonaFile', TendrilPersonaFile,
                         doc="Schema for Tendril Persona Definition Files")
