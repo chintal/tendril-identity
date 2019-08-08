@@ -60,7 +60,8 @@ class IdentityManager(object):
 
     def __getattr__(self, item):
         if item is None:
-            return TendrilPersona
+            return TendrilPersona({'ident': 'UNDEFINED',
+                                   'name': 'Placeholder Identity'})
         if item == '__all__':
             return list(self._identities_loaded.keys())
         if item == '__path__':
