@@ -25,7 +25,7 @@ Base Identity Schema
 
 
 from tendril.schema.base import NakedSchemaObject
-from tendril.schema.helpers import SchemaSelectableObjectSet
+from tendril.schema.helpers import SchemaSelectableObjectMapping
 from tendril.schema.helpers import MultilineString
 from tendril.config import instance_path
 from tendril.utils import log
@@ -64,11 +64,11 @@ class IdentityBankAccountInfo(NakedSchemaObject):
                "".format(self.bank_name, self.accno)
 
 
-class IdentitySignatories(SchemaSelectableObjectSet):
+class IdentitySignatories(SchemaSelectableObjectMapping):
     _objtype = IdentitySignatory
 
 
-class IdentityBankAccounts(SchemaSelectableObjectSet):
+class IdentityBankAccounts(SchemaSelectableObjectMapping):
     _objtype = IdentityBankAccountInfo
 
 
